@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1100</width>
-    <height>400</height>
+    <height>446</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,6 +22,19 @@
       <width>1080</width>
       <height>340</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="addentry">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>360</y>
+      <width>1080</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
     </property>
    </widget>
   </widget>
