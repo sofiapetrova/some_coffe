@@ -3,19 +3,20 @@ import sys
 from PyQt5 import uic  # Импортируем uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QWidget, QMessageBox
 from PyQt5.Qt import QAbstractItemView
-
 import sqlite3
+from mainForm import Ui_MainWindow
+from addEditCoffeeForm import Ui_Form
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('main.ui', self)  # Загружаем дизайн
+        # uic.loadUi('main.ui', self)  # Загружаем дизайн
+        self.setupUi(self)
         self.connection = None
 
         self.addentry.setText('Новая запись / редактирование')
         self.addentry.clicked.connect(self.open_add_form)
-        # self
         self.load_data()
 
     def open_add_form(self):
@@ -23,7 +24,7 @@ class MainWindow(QMainWindow):
         self.second_form.show()
 
     def load_data(self):
-        self.connection = sqlite3.connect("coffee.sqlite")
+        self.connection = sqlite3.connect("data/coffee.sqlite")
         query = f"""SELECT * FROM coffee"""
         res = self.connection.cursor().execute(query).fetchall()
 
@@ -46,10 +47,11 @@ class MainWindow(QMainWindow):
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
 
-class SecondForm(QWidget):
+class SecondForm(QWidget, Ui_Form):
     def __init__(self, *args):
         super().__init__()
-        uic.loadUi('addEditCoffeeForm.ui', self)
+        # uic.loadUi('addEditCoffeeForm.ui', self)
+        self.setupUi(self)
         self.add_button.clicked.connect(self.add_coffee)
         self.edit_button.clicked.connect(self.edit_coffee)
         self.show_id.clicked.connect(self.load_current)
@@ -71,7 +73,7 @@ class SecondForm(QWidget):
         msg.exec_()
 
     def add_coffee(self):
-        self.connection = sqlite3.connect("coffee.sqlite")
+        self.connection = sqlite3.connect("data/coffee.sqlite")
         data = []
         try:
             data.append(self.lineEdit_1.text())
@@ -101,10 +103,10 @@ class SecondForm(QWidget):
         self.connection.close()
 
     def default_load(self):
-        self.connection = sqlite3.connect("coffee.sqlite")
+        self.connection = sqlite3.connect("data/coffee.sqlite")
         query1 = f"SELECT * FROM coffee"
         load = self.connection.cursor().execute(query1).fetchone()
-        print(load)
+        # print(load)
         self.lineEdit_e_id.setText(str(load[0]))
         self.lineEdit_e_1.setText(load[1])
         self.lineEdit_e_2.setText(load[2])
@@ -114,13 +116,13 @@ class SecondForm(QWidget):
         self.lineEdit_e_6.setText(str(load[6]))
 
     def load_current(self):
-        self.connection = sqlite3.connect("coffee.sqlite")
+        self.connection = sqlite3.connect("data/coffee.sqlite")
         id = self.lineEdit_e_id.text()
         query = f"SELECT * FROM coffee WHERE ID=={str(id)}"
         load = []
         try:
             load = self.connection.cursor().execute(query).fetchone()
-            print(load)
+            # print(load)
         except Exception:
             self.error_msg("ошибка ввода ID")
         if load:
@@ -141,7 +143,7 @@ class SecondForm(QWidget):
             self.error_msg("запись в указанным ID не найдена")
 
     def edit_coffee(self):
-        self.connection = sqlite3.connect("coffee.sqlite")
+        self.connection = sqlite3.connect("data/coffee.sqlite")
         id = self.lineEdit_e_id.text()
         data = []
         try:
